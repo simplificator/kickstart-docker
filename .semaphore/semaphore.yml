@@ -53,6 +53,8 @@ blocks:
           value: centos@18.196.181.76
         - name: SSH_IDENTITY
           value: /home/semaphore/.ssh/id_rsa_deploy
+        - name: SSH_OPTIONS
+          value: -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
       secrets:
         - name: kickstart-ssh
       prologue:
@@ -63,8 +65,8 @@ blocks:
         - name: Deploy
           commands:
             - checkout
-            - "scp -i $SSH_IDENTITY deploy.sh $SSH_USER_AT_HOST:"
-            - ssh -i $SSH_IDENTITY $SSH_USER_AT_HOST source deploy.sh
+            - "scp -i $SSH_IDENTITY $SSH_OPTIONS deploy.sh $SSH_USER_AT_HOST:"
+            - ssh -i $SSH_IDENTITY $SSH_OPTIONS $SSH_USER_AT_HOST source deploy.sh
 
   - name: "Integration tests"
     task:
