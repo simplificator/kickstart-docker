@@ -52,7 +52,7 @@ blocks:
         - name: SSH_USER_AT_HOST
           value: centos@18.196.181.76
         - name: SSH_IDENTITY
-          value: .ssh/id_rsa_deploy
+          value: /home/semaphore/.ssh/id_rsa_deploy
       secrets:
         - name: kickstart-ssh
       prologue:
