@@ -51,14 +51,20 @@ blocks:
       env_vars:
         - name: SSH_USER_AT_HOST
           value: centos@18.196.181.76
+        - name: SSH_IDENTITY
+          value: .ssh/id_rsa_deploy
       secrets:
         - name: kickstart-ssh
+      prologue:
+        commands:
+          - checkout
+          - chmod 400 $SSH_IDENTITY
       jobs:
         - name: Deploy
           commands:
             - checkout
-            - "scp deploy.sh $SSH_USER_AT_HOST:"
-            - ssh $SSH_USER_AT_HOST source deploy.sh
+            - "scp -i $SSH_IDENTITY deploy.sh $SSH_USER_AT_HOST:"
+            - ssh -i $SSH_IDENTITY $SSH_USER_AT_HOST source deploy.sh
 
   - name: "Integration tests"
     task:
