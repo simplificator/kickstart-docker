@@ -3,6 +3,7 @@
 This projects is intended to demonstrate how to 
 
 * configure [Semaphore 2.0](https://simplificator.semaphoreci.com/)
+* use [Semaphore Secrets](https://docs.semaphoreci.com/article/66-environment-variables-and-secrets) for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 * build docker image
 * push docker image to registry
 * deploy it to a AWS Lightsail instance
