@@ -1,4 +1,4 @@
-# Docker Kickstart / Demo Project
+# Docker and Semaphore 2.0 Kickstart / Demo Project
 
 This projects is intended to demonstrate how to 
 
