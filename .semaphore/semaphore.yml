@@ -16,17 +16,8 @@ blocks:
         commands:
           - checkout
           - ls -1
-          - echo $APP_ENV
-          - echo "Docker build..."
-          - echo "done"
-
-  - name: "Smoke tests"
-    task:
-      jobs:
-      - name: Smoke
-        commands:
-          - checkout
-          - echo "make smoke"
+          - docker build -t nginx:test .
+          - docker images
 
   - name: "Unit tests"
     task:
