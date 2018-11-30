@@ -6,19 +6,6 @@ agent:
     os_image: ubuntu1804
 
 blocks:
-  - name: "Build"
-    task:
-      env_vars:
-        - name: APP_ENV
-          value: prod
-      jobs:
-        - name: Docker build
-          commands:
-            - checkout
-            - ls -1
-            - docker build -t nginx:test .
-            - docker images
-
   - name: "Unit tests"
     task:
       jobs:
@@ -37,6 +24,28 @@ blocks:
             - checkout
             - echo "make security"
 
+  - name: "Build and Push"
+    task:
+      env_vars:
+        - name: IMAGE
+          value: 135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator/kickstart
+        - name: AWS_DEFAULT_REGION
+          value: eu-central-1
+      secrets:
+        - name: kickstart-aws
+      prologue:
+        commands:
+          - sudo pip install awscli
+          - checkout
+          - aws ecr get-login --no-include-email | bash
+      jobs:
+        - name: Docker build
+          commands:
+            - ls -1
+            - docker build -t $IMAGE:$SEMAPHORE_GIT_BRANCH .
+            - docker images
+            - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
+
   - name: "Integration tests"
     task:
       jobs:
@@ -44,13 +53,3 @@ blocks:
           commands:
             - checkout
             - echo "make cucumber"
-
-  - name: "Push Image"
-    task:
-      secrets:
-        - name: kickstart-aws
-      jobs:
-        - name: Push
-          commands:
-            - checkout
-            - echo "make docker.push"
