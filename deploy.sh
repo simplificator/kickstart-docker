@@ -1,22 +1,33 @@
 #!/usr/bin/env bash
 set -e
 
-IMAGE=135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator/kickstart:master
+APP_NAME=kickstart
+STACK_NAME=$APP_NAME
+IMAGE=135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator/$APP_NAME:master
+AWS_DEFAULT_REGION=eu-central-1
 
-echo Docker login...
+echo "Deploying $APP_NAME..."
 
-echo Pull new image...
+alias aws='docker run --rm -t $(tty &>/dev/null && echo "-i") -e "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" -e "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" -e "AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}" -v "$(pwd):/project" mesosphere/aws-cli'
+
+echo " * Docker login..."
+aws ecr get-login --no-include-email | bash
+
+echo " * Pull new image..."
 
 docker pull $IMAGE
 
-echo Kill all running containers...
+# DOCKER INITIATION
+if docker node ls > /dev/null 2>&1; then
+  echo " * Swarm already initialized"
+else
+  echo " * Docker swarm initializing.."
+  docker swarm leave
+  docker swarm init
+fi
 
-# docker service stop...
-docker stop $(docker ps -aq)
-docker rm $(docker ps -aq)
+echo " * Deploying..."
 
-echo Deploying...
+docker stack deploy --compose-file docker-compose.yml $STACK_NAME
 
-docker service create -d -p 80:80 $IMAGE
-
-echo Deploy finished.
+echo "Deploying $APP_NAME finished."

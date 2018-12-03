@@ -66,6 +66,7 @@ blocks:
           commands:
             - checkout
             - "scp -i $SSH_IDENTITY $SSH_OPTIONS deploy.sh $SSH_USER_AT_HOST:"
+            - "scp -i $SSH_IDENTITY $SSH_OPTIONS docker-compose.yml $SSH_USER_AT_HOST:"
             - ssh -i $SSH_IDENTITY $SSH_OPTIONS $SSH_USER_AT_HOST source deploy.sh
 
   - name: "Integration tests"
