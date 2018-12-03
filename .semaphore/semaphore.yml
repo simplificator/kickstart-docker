@@ -24,7 +24,7 @@ blocks:
             - checkout
             - echo "make security"
 
-  - name: "Build and Push"
+  - name: "Build"
     task:
       env_vars:
         - name: IMAGE
