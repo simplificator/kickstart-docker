@@ -39,7 +39,7 @@ blocks:
           - checkout
           - aws ecr get-login --no-include-email | bash
       jobs:
-        - name: Docker build
+        - name: Docker build and push
           commands:
             - ls -1
             - docker build -t $IMAGE:$SEMAPHORE_GIT_BRANCH .
