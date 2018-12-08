@@ -9,20 +9,10 @@ blocks:
   - name: "Unit tests"
     task:
       jobs:
-        - name: RSpec
+        - name: Test
           commands:
             - checkout
-            - echo "make rspec"
-
-        - name: Lint code
-          commands:
-            - checkout
-            - echo "make lint"
-
-        - name: Check security
-          commands:
-            - checkout
-            - echo "make security"
+            - ./test.sh
 
   - name: "Build"
     task:
@@ -69,11 +59,3 @@ blocks:
             - "scp -i $SSH_IDENTITY $SSH_OPTIONS vhost.template $SSH_USER_AT_HOST:"
             - "scp -i $SSH_IDENTITY $SSH_OPTIONS docker-compose.yml $SSH_USER_AT_HOST:"
             - ssh -i $SSH_IDENTITY $SSH_OPTIONS $SSH_USER_AT_HOST AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY sh deploy.sh
-
-  - name: "Integration tests"
-    task:
-      jobs:
-        - name: Cucumber
-          commands:
-            - checkout
-            - echo "make cucumber"
