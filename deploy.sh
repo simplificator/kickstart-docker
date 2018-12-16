@@ -13,10 +13,6 @@ alias aws='docker run --rm $(tty &>/dev/null && echo "-i") -e "AWS_ACCESS_KEY_ID
 echo " * Docker login..."
 aws ecr get-login --no-include-email | bash
 
-echo " * Pull new image..."
-
-docker pull $IMAGE
-
 # DOCKER INITIATION
 if docker node ls > /dev/null 2>&1; then
   echo " * Swarm already initialized"
