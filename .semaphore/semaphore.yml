@@ -32,8 +32,18 @@ blocks:
         - name: Docker build and push
           commands:
             - ls -1
-            - docker build -t $IMAGE:$SEMAPHORE_GIT_BRANCH .
+            - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH-builder || true
+            - docker pull $IMAGE:$SEMAPHORE_GIT_BRANCH || true
+            - docker build
+                --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH-builder
+                --tag $IMAGE:$SEMAPHORE_GIT_BRANCH-builder
+                --target builder .
+            - docker build
+                --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH-builder
+                --cache-from $IMAGE:$SEMAPHORE_GIT_BRANCH
+                --tag $IMAGE:$SEMAPHORE_GIT_BRANCH .
             - docker images
+            - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH-builder
             - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
 
   - name: "Deploy to Integration"
