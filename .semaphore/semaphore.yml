@@ -19,11 +19,6 @@ blocks:
             - checkout
             - echo "make lint"
 
-        - name: Check security
-          commands:
-            - checkout
-            - echo "make security"
-
   - name: "Build"
     task:
       env_vars:
