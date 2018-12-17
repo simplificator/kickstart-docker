@@ -27,6 +27,11 @@ else
   docker swarm init
 fi
 
+if docker stack ps $STACK_NAME; then
+  echo " * Remove old deployment..."
+  docker stack rm $STACK_NAME
+fi
+
 echo " * Deploying..."
 
 REGISTRY=$REGISTRY docker stack deploy --compose-file docker-compose.yml $STACK_NAME
