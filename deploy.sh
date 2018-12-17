@@ -29,6 +29,6 @@ fi
 
 echo " * Deploying..."
 
-docker stack deploy --compose-file docker-compose.yml $STACK_NAME
+REGISTRY=$REGISTRY docker stack deploy --compose-file docker-compose.yml $STACK_NAME
 
 echo "Deploying $APP_NAME finished."

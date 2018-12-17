@@ -1,8 +1,5 @@
 version: '3'
 
-environment:
-  - REGISTRY=135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator
-
 services:
   webserver:
     image: $REGISTRY/kickstart:master
