@@ -3,7 +3,8 @@ set -e
 
 APP_NAME=kickstart
 STACK_NAME=$APP_NAME
-IMAGE=135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator/$APP_NAME:master
+REGISTRY=135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator
+IMAGE=$APP_NAME:master
 AWS_DEFAULT_REGION=eu-central-1
 
 echo "Deploying $APP_NAME..."
@@ -14,8 +15,8 @@ echo " * Docker login..."
 aws ecr get-login --no-include-email | bash
 
 echo " * Pull new image..."
-
-docker pull $IMAGE
+# this is just to check whether docker login was successful. stack deploy will pull anyway
+docker pull $REGISTRY/$IMAGE
 
 # DOCKER INITIATION
 if docker node ls > /dev/null 2>&1; then

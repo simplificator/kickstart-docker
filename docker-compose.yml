@@ -1,7 +1,10 @@
 version: '3'
 
+environment:
+  - REGISTRY=135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator
+
 services:
   webserver:
-    image: 135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator/kickstart:master
+    image: $REGISTRY/kickstart:master
     ports:
       - "80:80"
