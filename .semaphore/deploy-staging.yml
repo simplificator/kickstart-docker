@@ -1,0 +1,38 @@
+version: v1.0
+name: Deploy and test / Staging
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: "Deploy to Staging"
+    task:
+      env_vars:
+        - name: SSH_USER_AT_HOST
+          value: centos@18.196.181.76
+        - name: SSH_IDENTITY
+          value: /home/semaphore/.ssh/id_rsa_deploy
+        - name: SSH_OPTIONS
+          value: -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+      secrets:
+        - name: kickstart-ssh
+      prologue:
+        commands:
+          - checkout
+          - chmod 400 $SSH_IDENTITY
+      jobs:
+        - name: Deploy
+          commands:
+            - checkout
+            - "scp -i $SSH_IDENTITY $SSH_OPTIONS deploy.sh $SSH_USER_AT_HOST:"
+            - "scp -i $SSH_IDENTITY $SSH_OPTIONS docker-compose.yml $SSH_USER_AT_HOST:"
+            - ssh -i $SSH_IDENTITY $SSH_OPTIONS $SSH_USER_AT_HOST TAG=$SEMAPHORE_GIT_BRANCH AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY sh deploy.sh
+
+  - name: "Integration tests"
+    task:
+      jobs:
+        - name: Cucumber
+          commands:
+            - checkout
+            - echo "make cucumber"
