@@ -22,10 +22,8 @@ blocks:
   - name: "Build"
     task:
       env_vars:
-        - name: IMAGE
-          value: kickstart
-        - name: REGISTRY
-          value: 135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator
+        - name: REPOSITORY
+          value: 135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator/kickstart
         - name: AWS_DEFAULT_REGION
           value: eu-central-1
       secrets:
@@ -39,9 +37,9 @@ blocks:
         - name: Docker build and push
           commands:
             - ls -1
-            - docker build -t $REGISTRY/$IMAGE:$SEMAPHORE_GIT_BRANCH .
+            - docker build -t $REPOSITORY:$SEMAPHORE_GIT_BRANCH .
             - docker images
-            - docker push $REGISTRY/$IMAGE:$SEMAPHORE_GIT_BRANCH
+            - docker push $REPOSITORY:$SEMAPHORE_GIT_BRANCH
 
 promotions:
   - name: Deploy staging

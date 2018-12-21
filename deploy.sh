@@ -3,8 +3,8 @@ set -e
 
 APP_NAME=kickstart
 STACK_NAME=$APP_NAME
-REGISTRY=135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator
-IMAGE=$REGISTRY:$TAG
+REPOSITORY=135594858514.dkr.ecr.eu-central-1.amazonaws.com/simplificator/kickstart
+IMAGE=$REPOSITORY:$TAG
 AWS_DEFAULT_REGION=eu-central-1
 
 echo "Deploying $APP_NAME..."
