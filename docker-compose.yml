@@ -2,6 +2,6 @@ version: '3'
 
 services:
   webserver:
-    image: $REGISTRY/kickstart:master
+    image: $IMAGE
     ports:
       - "80:80"
