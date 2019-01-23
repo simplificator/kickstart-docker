@@ -27,6 +27,7 @@ blocks:
 
         - name: Ansible ping
           commands:
+            - ls -ltra ~/.ssh/
             - ansible all -m ping -u centos
 
   - name: "Build"
