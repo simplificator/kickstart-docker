@@ -17,12 +17,11 @@ echo " * Pull new image..."
 
 docker pull $IMAGE
 
-# DOCKER INITIATION
+# DOCKER INITIALIZATION
 if docker node ls > /dev/null 2>&1; then
   echo " * Swarm already initialized"
 else
   echo " * Docker swarm initializing.."
-  docker swarm leave
   docker swarm init
 fi
 
