@@ -14,7 +14,7 @@ blocks:
       prologue:
         commands:
           - checkout
-          - alias ansible='docker run --rm -it -v $(pwd)/ansible:/etc/ansible -v ~/.ssh:/root/.ssh williamyeh/ansible:alpine3 ansible --private-key /root/.ssh/id_rsa_deploy '
+          - alias ansible='docker run --rm -it -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa williamyeh/ansible:alpine3 ansible '
 
       jobs:
         - name: Unit Tests
@@ -27,7 +27,6 @@ blocks:
 
         - name: Ansible ping
           commands:
-            - ls -ltra ~/.ssh/
             - ansible all -m ping -u centos
 
   - name: "Build"
