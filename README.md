@@ -1,4 +1,4 @@
-# Docker and Semaphore 2.0 Kickstart / Demo Project
+# Ansible, Docker and Semaphore 2.0 Kickstart / Demo Project
 
 This projects is intended to demonstrate how to 
 
@@ -6,7 +6,17 @@ This projects is intended to demonstrate how to
 * use [Semaphore Secrets](https://docs.semaphoreci.com/article/66-environment-variables-and-secrets) for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 * build docker image
 * push docker image to registry
-* deploy it to a AWS Lightsail instance
+* deploy it using `ansible` to any host (with SSH access)
+
+
+## `ansible` Alias
+
+*Hint*: instead of installing `ansible` you might want to run it in a container, using 
+
+```
+alias ansible='docker run --rm -it -v $(pwd)/ansible:/etc/ansible -v ~/.ssh:/root/.ssh williamyeh/ansible:alpine3 ansible'
+```
+
 
 ## Further reading:
 
