@@ -1,1 +1,3 @@
 semaphore-secrets.yml
+ansible/*.retry
+ansible/roles/*.docker/

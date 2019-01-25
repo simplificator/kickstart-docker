@@ -1,5 +1,6 @@
 
 - hosts: all
+
   tasks:
 
   - name: "Add authorized keys for root"
@@ -10,3 +11,6 @@
       group: "root"
       mode: 0600
     when: authorized_keys['root'] is defined
+
+  roles:
+    - geerlingguy.docker
