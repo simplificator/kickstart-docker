@@ -53,19 +53,20 @@ blocks:
 
   - name: "Deploy to Integration"
     task:
-      env_vars:
-        - name: SSH_USER_AT_HOST
-          value: centos@18.196.181.76
-        - name: SSH_IDENTITY
-          value: /home/semaphore/.ssh/id_rsa_deploy
-        - name: SSH_OPTIONS
-          value: -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
       secrets:
         - name: kickstart-ssh
+
       prologue:
         commands:
           - checkout
-          - chmod 400 $SSH_IDENTITY
+          - alias ansible='docker run --rm -it -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa williamyeh/ansible:alpine3 ansible '
+          - alias ansible-playbook='docker run --rm -it --workdir /etc/ansible -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa williamyeh/ansible:alpine3 ansible-playbook '
+
+      jobs:
+        - name: Ansible provision
+          commands:
+            - ansible-playbook provision.yml
+
       jobs:
         - name: Deploy
           commands:
