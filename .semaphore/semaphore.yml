@@ -27,7 +27,7 @@ blocks:
 
         - name: Ansible ping
           commands:
-            - ansible all -m ping -u centos
+            - ansible all -m ping -u root
 
   - name: "Build"
     task:
