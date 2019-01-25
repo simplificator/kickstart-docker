@@ -1,0 +1,6 @@
+- src: geerlingguy.docker
+
+- name: app_user
+  scm: git
+  src: git@github.com:simplificator/ansible-role-app_user.git
+  version: remove-www-data
