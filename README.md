@@ -6,7 +6,8 @@ This projects is intended to demonstrate how to
 * use [Semaphore Secrets](https://docs.semaphoreci.com/article/66-environment-variables-and-secrets) for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 * build docker image
 * push docker image to registry
-* deploy it using `ansible` to any host (with SSH access)
+* provision target host using `ansible`
+* deploy with plain SSH/SCP access
 
 
 ## `ansible` Alias

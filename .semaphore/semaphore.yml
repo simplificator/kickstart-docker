@@ -51,7 +51,7 @@ blocks:
             - docker images
             - docker push $REPOSITORY:$SEMAPHORE_GIT_BRANCH
 
-  - name: "Deploy to Integration"
+  - name: "Provision"
     task:
       secrets:
         - name: kickstart-ssh
@@ -70,18 +70,6 @@ blocks:
             - ansible-galaxy install --roles-path ./roles/ --role-file requirements.yml
             - ansible-playbook provision.yml
 
-      jobs:
-        - name: Ansible provision
-          commands:
-            - ansible-playbook provision.yml
-
-        - name: Deploy
-          commands:
-            - checkout
-            - "scp -i $SSH_IDENTITY $SSH_OPTIONS deploy.sh $SSH_USER_AT_HOST:"
-            - "scp -i $SSH_IDENTITY $SSH_OPTIONS docker-compose.yml $SSH_USER_AT_HOST:"
-            - ssh -i $SSH_IDENTITY $SSH_OPTIONS $SSH_USER_AT_HOST AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY sh deploy.sh
-
   - name: "Integration tests"
     task:
       jobs:
@@ -97,4 +85,3 @@ promotions:
       - result: passed
         branch:
           - master
-            - docker push $IMAGE:$SEMAPHORE_GIT_BRANCH
