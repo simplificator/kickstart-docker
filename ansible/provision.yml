@@ -13,4 +13,5 @@
     when: authorized_keys['root'] is defined
 
   roles:
+    - app_user
     - geerlingguy.docker
