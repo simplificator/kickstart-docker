@@ -3,7 +3,6 @@
 
   roles:
     - app_user
-    - geerlingguy.docker
 
   tasks:
   - name: "Add authorized keys for root"
@@ -15,17 +14,22 @@
       mode: 0600
     when: authorized_keys['root'] is defined
 
-  - name: Copy docker-compose.yml
+  - name: "Copy deployment files"
     copy:
-      src: "docker-compose.yml"
-      dest: "/home/{{ app_user }}/docker-compose.yml"
+      src: "{{ item }}"
+      dest: "/home/{{ app_user }}/{{ item }}"
       owner: "{{ app_user }}"
       group: "{{ app_user }}"
+      mode: +x
+    loop:
+      - docker-compose.yml
+      - deploy.sh
 
   - name: Run deploy.sh
-    script: deploy.sh
+    shell: ./deploy.sh
     args:
       chdir: "/home/{{ app_user }}/"
+      executable: /bin/bash
     environment:
       AWS_ACCESS_KEY_ID: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
       AWS_SECRET_ACCESS_KEY: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
