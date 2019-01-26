@@ -61,21 +61,14 @@ blocks:
           - checkout
           - docker build -t ansible:local ./ansible
           - alias ansible='docker run --rm -it -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa ansible:local ansible '
-          - alias ansible-playbook='docker run --rm -it --workdir /etc/ansible -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa ansible:local ansible-playbook '
+          - alias ansible-playbook='docker run --rm -it --workdir /etc/ansible -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY ansible:local ansible-playbook '
           - alias ansible-galaxy='docker run --rm -it --workdir /etc/ansible -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa ansible:local ansible-galaxy'
 
       jobs:
-        - name: Ansible provision
+        - name: Ansible provision and deploy
           commands:
             - ansible-galaxy install --roles-path ./roles/ --role-file requirements.yml
             - ansible-playbook provision.yml
-
-        - name: Deploy
-          commands:
-            - checkout
-            - "scp -i $SSH_IDENTITY $SSH_OPTIONS deploy.sh $SSH_USER_AT_HOST:"
-            - "scp -i $SSH_IDENTITY $SSH_OPTIONS docker-compose.yml $SSH_USER_AT_HOST:"
-            - ssh -i $SSH_IDENTITY $SSH_OPTIONS $SSH_USER_AT_HOST AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY sh deploy.sh
 
   - name: "Integration tests"
     task:
