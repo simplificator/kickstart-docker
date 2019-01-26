@@ -1,28 +1,33 @@
 version: v1.0
-name: Build and Deploy docker container
+name: Test, Build and Deploy docker container
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
 
 blocks:
-  - name: "Unit tests"
+  - name: "Tests"
     task:
+      secrets:
+        - name: kickstart-ssh
+
+      prologue:
+        commands:
+          - checkout
+          - alias ansible='docker run --rm -it -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa williamyeh/ansible:alpine3 ansible '
+
       jobs:
-        - name: RSpec
+        - name: Unit Tests
           commands:
-            - checkout
-            - echo "make rspec"
+            - echo "run unit tests"
 
         - name: Lint code
           commands:
-            - checkout
             - echo "make lint"
 
-        - name: Check security
+        - name: Ansible ping
           commands:
-            - checkout
-            - echo "make security"
+            - ansible all -m ping -u root
 
   - name: "Build"
     task:
@@ -48,20 +53,22 @@ blocks:
 
   - name: "Deploy to Integration"
     task:
-      env_vars:
-        - name: SSH_USER_AT_HOST
-          value: centos@18.196.181.76
-        - name: SSH_IDENTITY
-          value: /home/semaphore/.ssh/id_rsa_deploy
-        - name: SSH_OPTIONS
-          value: -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
       secrets:
         - name: kickstart-ssh
+
       prologue:
         commands:
           - checkout
-          - chmod 400 $SSH_IDENTITY
+          - alias ansible='docker run --rm -it -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa williamyeh/ansible:alpine3 ansible '
+          - alias ansible-playbook='docker run --rm -it --workdir /etc/ansible -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa williamyeh/ansible:alpine3 ansible-playbook '
+          - alias ansible-galaxy='docker run --rm -it --workdir /etc/ansible -v $(pwd)/ansible:/etc/ansible williamyeh/ansible:alpine3 ansible-galaxy'
+
       jobs:
+        - name: Ansible provision
+          commands:
+            - ansible-galaxy install --roles-path ./roles/ --role-file requirements.yml
+            - ansible-playbook provision.yml
+
         - name: Deploy
           commands:
             - checkout

@@ -1,0 +1,16 @@
+
+- hosts: all
+
+  tasks:
+
+  - name: "Add authorized keys for root"
+    copy:
+      content: "{{ authorized_keys['root'] }}"
+      dest: "~root/.ssh/authorized_keys"
+      owner: "root"
+      group: "root"
+      mode: 0600
+    when: authorized_keys['root'] is defined
+
+  roles:
+    - geerlingguy.docker
