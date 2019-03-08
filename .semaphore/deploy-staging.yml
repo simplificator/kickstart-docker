@@ -10,7 +10,7 @@ blocks:
     task:
       env_vars:
         - name: SSH_USER_AT_HOST
-          value: centos@18.196.181.76
+          value: butler@18.196.181.76
         - name: SSH_IDENTITY
           value: /home/semaphore/.ssh/id_rsa_deploy
         - name: SSH_OPTIONS
