@@ -25,8 +25,8 @@ blocks:
         - name: Deploy
           commands:
             - checkout
-            - "scp -i $SSH_IDENTITY $SSH_OPTIONS deploy.sh $SSH_USER_AT_HOST:"
-            - "scp -i $SSH_IDENTITY $SSH_OPTIONS docker-compose.yml $SSH_USER_AT_HOST:"
+            - "scp -i $SSH_IDENTITY $SSH_OPTIONS deploy/deploy.sh $SSH_USER_AT_HOST:"
+            - "scp -i $SSH_IDENTITY $SSH_OPTIONS deploy/docker-compose.yml $SSH_USER_AT_HOST:"
             - ssh -i $SSH_IDENTITY $SSH_OPTIONS $SSH_USER_AT_HOST TAG=$SEMAPHORE_GIT_BRANCH AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY sh deploy.sh
 
   - name: "Integration tests"
