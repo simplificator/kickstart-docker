@@ -33,4 +33,7 @@ echo " * Deploying..."
 
 IMAGE=$IMAGE docker stack deploy --compose-file docker-compose.yml $STACK_NAME
 
+echo " * Wait for completion..."
+./docker-stack-wait.sh $STACK_NAME
+
 echo "Deploying $APP_NAME finished."
