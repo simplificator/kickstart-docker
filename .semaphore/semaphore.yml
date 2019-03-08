@@ -1,23 +1,33 @@
 version: v1.0
-name: Build and Deploy docker container
+name: Test, Build and Deploy docker container
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
 
 blocks:
-  - name: "Unit tests"
+  - name: "Tests"
     task:
+      secrets:
+        - name: kickstart-ssh
+
+      prologue:
+        commands:
+          - checkout
+          - alias ansible='docker run --rm -it -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa williamyeh/ansible:alpine3 ansible '
+
       jobs:
-        - name: RSpec
+        - name: Unit Tests
           commands:
-            - checkout
-            - echo "make rspec"
+            - echo "run unit tests"
 
         - name: Lint code
           commands:
-            - checkout
             - echo "make lint"
+
+        - name: Ansible ping
+          commands:
+            - ansible all -m ping -u root
 
   - name: "Build"
     task:
@@ -40,6 +50,33 @@ blocks:
             - docker build -t $REPOSITORY:$SEMAPHORE_GIT_BRANCH .
             - docker images
             - docker push $REPOSITORY:$SEMAPHORE_GIT_BRANCH
+
+  - name: "Provision"
+    task:
+      secrets:
+        - name: kickstart-ssh
+
+      prologue:
+        commands:
+          - checkout
+          - docker build -t ansible:local ./ansible
+          - alias ansible='docker run --rm -it -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa ansible:local ansible '
+          - alias ansible-playbook='docker run --rm -it --workdir /etc/ansible -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa ansible:local ansible-playbook '
+          - alias ansible-galaxy='docker run --rm -it --workdir /etc/ansible -v $(pwd)/ansible:/etc/ansible -v ~/.ssh/id_rsa_deploy:/root/.ssh/id_rsa ansible:local ansible-galaxy'
+
+      jobs:
+        - name: Ansible provision
+          commands:
+            - ansible-galaxy install --roles-path ./roles/ --role-file requirements.yml
+            - ansible-playbook provision.yml
+
+  - name: "Integration tests"
+    task:
+      jobs:
+        - name: Cucumber
+          commands:
+            - checkout
+            - echo "make cucumber"
 
 promotions:
   - name: Deploy staging
