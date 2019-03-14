@@ -8,7 +8,7 @@ This projects is intended to demonstrate how to
 * push docker image to registry
 * provision target host using `ansible`
 * deploy with plain SSH/SCP access
-* provide a [Project Quality Checklist](project_quality.md)
+* provide a [Quality Assurance Checklist](quality.md)
 
 
 ## `ansible` Alias

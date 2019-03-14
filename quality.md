@@ -1,4 +1,4 @@
-# Project quality assurance
+# Quality assurance
 
 We, Simplificator, aim to deliver high quality software to our customers during the entire product lifecycle. We strive for sustainability: robustness and maintainability. This checklist is intended to help teams achieve these goals.
 
