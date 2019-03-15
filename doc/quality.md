@@ -29,7 +29,7 @@ _According to the [Quality Assurance Checklist from the Simplificator Charta](ht
 
 ### Documentation
 
-* [ ] Project Board linked on [Readme](README.md) (e.g. Trello)
+* [ ] Project Board linked on [Readme](../README.md) (e.g. Trello)
 * [ ] Moco & [AppsApp](https://apps.simplificator.com) properly linked
 * [ ] High-level architecture is described, incl. diagram (link here)
 * [ ] All interfaces are described, including third-party APIs along with a link to the provider
